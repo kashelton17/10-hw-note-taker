@@ -181,3 +181,6 @@ if (window.location.pathname === '/notes') {
 }
 
 getAndRenderNotes();
+if (window.location.pathname === '/notes') {
+  saveNoteBtn.addEventListener('click', getAndRenderNotes);
+}
