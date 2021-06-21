@@ -19,22 +19,43 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, './public/index.htm
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, './public/notes.html')))
 
 app.get('/api/notes', (req, res) => res.json(JSONdb))
+console.log(JSONdb)
 
-app.get('api/notes/:noteID', (req, res) => {
-    const note = req.params.noteID
+app.get('/api/notes/:note', (req, res) => {
+    const note = req.params.note
+    console.log(note)
     JSONdb.forEach(element => {
+        console.log(element)
         if (note === element.id) {
             return res.json(element)
-        }
-        return false
-    });
+        }  
+    })
+    return 'Sorry no notes found with that ID'
+})
+
+app.delete('/api/notes/:note', (req, res) => {
+    const note = req.params.note
+    console.log(note)
+    JSONdb.forEach(element => {
+        console.log(element)
+        if (note === element.id) {
+            let index = JSONdb.indexOf(element)
+            JSONdb.splice(index, 1)
+            fs.writeFile('./db/db.json', JSON.stringify(JSONdb), err => {
+                if (err) throw err;
+                console.log('Item was deleted')
+            })
+            return res.json(JSONdb)
+        }  
+    })
+    return 'Sorry no notes found with that ID'
 })
 
 app.post('/api/notes', (req, res) => {
     const newNote = req.body
     let random = Math.floor(Math.random() * 34029384)
     let uniqueID = `${newNote.title}${random}`
-    newNote.id = uniqueID
+    newNote.id = uniqueID.replace(/\s+/g, '').toLowerCase()
     console.log(newNote)
     JSONdb.push(newNote)
     let data = JSON.stringify(JSONdb)
@@ -43,6 +64,7 @@ app.post('/api/notes', (req, res) => {
         if (err) throw err;
         console.log('The new note was saved')
     })
+    res.json(data)
     
 })
 
