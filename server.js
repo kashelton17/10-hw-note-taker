@@ -19,13 +19,11 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, './public/index.htm
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, './public/notes.html')))
 
 app.get('/api/notes', (req, res) => res.json(JSONdb))
-console.log(JSONdb)
 
 app.get('/api/notes/:note', (req, res) => {
     const note = req.params.note
     console.log(note)
     JSONdb.forEach(element => {
-        console.log(element)
         if (note === element.id) {
             return res.json(element)
         }  
@@ -35,9 +33,7 @@ app.get('/api/notes/:note', (req, res) => {
 
 app.delete('/api/notes/:note', (req, res) => {
     const note = req.params.note
-    console.log(note)
     JSONdb.forEach(element => {
-        console.log(element)
         if (note === element.id) {
             let index = JSONdb.indexOf(element)
             JSONdb.splice(index, 1)
