@@ -18,11 +18,12 @@ app.use(express.static(__dirname + '/public/'));
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, './public/index.html')))
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, './public/notes.html')))
 
+//creating 'database' route
 app.get('/api/notes', (req, res) => res.json(JSONdb))
 
+// getting single note based on id input in routename
 app.get('/api/notes/:note', (req, res) => {
     const note = req.params.note
-    console.log(note)
     JSONdb.forEach(element => {
         if (note === element.id) {
             return res.json(element)
@@ -31,6 +32,7 @@ app.get('/api/notes/:note', (req, res) => {
     return 'Sorry no notes found with that ID'
 })
 
+//adding ability to delete a specified note
 app.delete('/api/notes/:note', (req, res) => {
     const note = req.params.note
     JSONdb.forEach(element => {
@@ -47,12 +49,12 @@ app.delete('/api/notes/:note', (req, res) => {
     return 'Sorry no notes found with that ID'
 })
 
+// adding ability to post to /api/notes route
 app.post('/api/notes', (req, res) => {
     const newNote = req.body
     let random = Math.floor(Math.random() * 34029384)
     let uniqueID = `${newNote.title}${random}`
     newNote.id = uniqueID.replace(/\s+/g, '').toLowerCase()
-    console.log(newNote)
     JSONdb.push(newNote)
     let data = JSON.stringify(JSONdb)
     
@@ -64,4 +66,5 @@ app.post('/api/notes', (req, res) => {
     
 })
 
+// listening on port
 app.listen(PORT, () => console.log(`App listening on http://localhost:${PORT}/`))
